@@ -1,4 +1,3 @@
-# Imports
 from colorama import init as colorama_init
 from colorama import Fore
 from colorama import Style
@@ -6,11 +5,22 @@ import os
 import time
 import csv
 
-# Clear Terminal
 os.system("cls" if os.name == "nt" else "clear")
 
 while True:
-    print(f"{Fore.RED}{Style.BRIGHT}Arnis' Study Helper{Style.RESET_ALL}")
+    duplicate_checker_condition = True
+    print(
+        """\
+                      _        _____ _             _         _    _      _                 
+     /\              (_)      / ____| |           | |       | |  | |    | |                
+    /  \   _ __ _ __  _ ___  | (___ | |_ _   _  __| |_   _  | |__| | ___| |_ __   ___ _ __ 
+   / /\ \ | '__| '_ \| / __|  \___ \| __| | | |/ _` | | | | |  __  |/ _ \ | '_ \ / _ \ '__|
+  / ____ \| |  | | | | \__ \  ____) | |_| |_| | (_| | |_| | | |  | |  __/ | |_) |  __/ |   
+ /_/    \_\_|  |_| |_|_|___/ |_____/ \__|\__,_|\__,_|\__, | |_|  |_|\___|_| .__/ \___|_|   
+                                                      __/ |               | |              
+                                                     |___/                |_|              
+"""
+    )
     print(
         f"What would you like to access?\n{Fore.GREEN}[1] Flashcards{Style.RESET_ALL}"
     )
@@ -87,6 +97,7 @@ while True:
                                 break
                             elif confirm_back_card.lower() == "n":
                                 os.system("cls" if os.name == "nt" else "clear")
+                                break
                             else:
                                 os.system("cls" if os.name == "nt" else "clear")
                                 print(f"{Fore.RED}Invalid Input{Style.RESET_ALL}")
@@ -98,10 +109,41 @@ while True:
                         ):
                             break
                     flashcard_writer.writerow([front_card, back_card])
-                    flashcard_writer
+                    print(
+                        f"{Fore.GREEN}Successfully made flashcard set '{flashcard_name}{Style.RESET_ALL}'"
+                    )
+                    time.sleep(2)
+
             elif second_choice == "2":
                 os.system("cls" if os.name == "nt" else "clear")
                 # ACCESS FLASHCARDS
+                # Read all CSV file names and then list them, let user access each csv (flashcard set) using a number (like rest of menu)
+                # Re-use duplicate checker to find csv names
+                print("Which flashcard set would you like to access?")
+                duplicate_checker_index = 1
+                duplicate_checker = []
+                choice = ""
+                while duplicate_checker_condition == True:
+                    for i in os.listdir():
+                        if i.endswith(".csv"):
+                            if choice == duplicate_checker_index:
+                                choice = i
+                                duplicate_checker_condition = False
+                                break
+                            print(
+                                f"{Fore.GREEN}[{duplicate_checker_index}] {i[:-4]}{Style.RESET_ALL}"
+                            )
+                            duplicate_checker_index += 1
+                    if duplicate_checker_condition == True:
+                        choice = int(input(""))
+                    duplicate_checker_index = 1
+                    os.system("cls" if os.name == "nt" else "clear")
+                    if duplicate_checker_condition == False:
+                        print(choice[:-4])
+                        with open(f"{choice}", "r") as file:
+                            reader = csv.reader(file)
+                            for row in reader:
+                                print(row)
             elif second_choice == "3":
                 os.system("cls" if os.name == "nt" else "clear")
                 break
